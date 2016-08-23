@@ -1,11 +1,5 @@
 FROM ubuntu:14.04
 
-RUN apt-get -y update \
-	&& apt-get -y install --no-install-recommends \
-		aptitude \
-		vim \
-	&& rm -rf /var/lib/apt/lists/*
-
 ENV NGINX_VERSION 1.10.1-1~trusty
 
 RUN apt-key adv --keyserver hkp://pgp.mit.edu:80 \
@@ -68,7 +62,8 @@ RUN cd ${MOINMOIN_HOME}/moin-${MOINMOIN_VERSION} \
 	&& mv /etc/nginx/conf.d/default.conf /etc/nginx/conf.d/default.conf.orig \
 	&& usermod -aG www-data nginx \
 	&& chmod 554 ${ENTRYPOINT_FILE} \
-	&& ln -s ${ENTRYPOINT_FILE} /entrypoint.sh
+	&& ln -s ${ENTRYPOINT_FILE} /entrypoint.sh \
+	&& rm -rf /moin_ru-en.tar.gz ${MOINMOIN_HOME}/moin-${MOINMOIN_VERSION}
 
 VOLUME ${MOINMOIN_HOME}/wiki
 
