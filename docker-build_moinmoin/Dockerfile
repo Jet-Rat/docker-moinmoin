@@ -44,9 +44,14 @@ RUN apt-get -y update \
 		uwsgi-plugin-python \
 	&& rm -rf /var/lib/apt/lists/*
 
+COPY nginx.conf /etc/nginx/nginx.conf
+COPY nginx_moin.conf /etc/nginx/conf.d/nginx_moin.conf
 COPY moin.wsgi /tmp/moin.wsgi
-COPY uwsgi.xml /tmp/uwsgi.xml
-COPY moin.conf /tmp/moin.conf
+COPY uwsgi_moin.ini /etc/uwsgi/apps-available/uwsgi_moin.ini
+
+ENV ENTRYPOINT_FILE /usr/local/sbin/entrypoint.sh
+
+COPY entrypoint.sh ${ENTRYPOINT_FILE}
 
 RUN cd ${MOINMOIN_HOME}/moin-${MOINMOIN_VERSION} \
 	&& python2.7 setup.py install \
@@ -54,12 +59,17 @@ RUN cd ${MOINMOIN_HOME}/moin-${MOINMOIN_VERSION} \
 	&& cd ${MOINMOIN_HOME}/wiki \
 	&& cp config/wikiconfig.py \
 		/tmp/moin.wsgi \
-		/tmp/uwsgi.xml \
 		. \
+	&& mkdir /etc/moin \
+	&& ln -s /srv/www/moin/wiki/wikiconfig.py /etc/moin/wikiconfig.py \
 	&& chown www-data:www-data -R ${MOINMOIN_HOME} \
-	&& cp /tmp/moin.conf /etc/init/moin.conf
+	&& ln -s /etc/uwsgi/apps-available/uwsgi_moin.ini /etc/uwsgi/apps-enabled/uwsgi_moin.ini \
+	&& mv /etc/nginx/conf.d/default.conf /etc/nginx/conf.d/default.conf.orig \
+	&& usermod -aG www-data nginx \
+	&& chmod 554 ${ENTRYPOINT_FILE} \
+	&& ln -s ${ENTRYPOINT_FILE} /entrypoint.sh
 
 
 EXPOSE 80 443
 
-CMD ["bash"]
+CMD ["entrypoint.sh"]

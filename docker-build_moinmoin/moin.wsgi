@@ -39,6 +39,7 @@ import sys, os
 #from MoinMoin import log
 #log.load_config('/path/to/logging_configuration_file')
 
+sys.path.insert(0, '/usr/local/lib/python2.7/dist-packages/')
 sys.path.insert(0, '/srv/www/moin/wiki/')
 
 from MoinMoin.web.serving import make_application
@@ -48,4 +49,3 @@ from MoinMoin.web.serving import make_application
 # use shared=False to not have moin serve static docs
 # use shared='/my/path/to/htdocs' to serve static docs from that path
 application = make_application(shared=True)
-
