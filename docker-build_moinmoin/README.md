@@ -8,7 +8,7 @@ sudo docker run -d --name moin \
 -e FRONT_PAGE="StartingPage" \
 -e WIKI_SUPERUSER="MySuperUser" \
 -e DEFAULT_LANG="ru" \
--p 80:80
+-p 80:80 \
 jetrat/moinmoin19
 ```
 
