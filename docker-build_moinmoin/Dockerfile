@@ -1,6 +1,6 @@
 FROM ubuntu:14.04
 
-ENV NGINX_VERSION 1.10.1-1~trusty
+ENV NGINX_VERSION 1.10.2-1~trusty
 
 RUN apt-key adv --keyserver hkp://pgp.mit.edu:80 \
 		--recv-keys 573BFD6B3D8FBC641079A6ABABF5BD827BD9BF62 \
@@ -18,7 +18,7 @@ RUN apt-key adv --keyserver hkp://pgp.mit.edu:80 \
 		nginx-module-njs \
 		;
 
-ENV MOINMOIN_VERSION 1.9.8
+ENV MOINMOIN_VERSION 1.9.9
 ENV MOINMOIN_HOME /srv/www/moin
 
 RUN apt-get -y update \
@@ -66,15 +66,17 @@ RUN cd ${MOINMOIN_HOME}/moin-${MOINMOIN_VERSION} \
 	&& rm -rf /moin_ru-en.tar.gz ${MOINMOIN_HOME}/moin-${MOINMOIN_VERSION}
 
 
-ENV MARKDOWN_VERSION 2.6.6
+ENV MARKDOWN_VERSION 2.6.7
 
 RUN cd ${MOINMOIN_HOME}/wiki/data/plugin/parser \
 	&& wget -O text_markdown.py "https://moinmo.in/ParserMarket/Markdown?action=AttachFile&do=get&target=text_markdown.py" \
 	&& cd /tmp/ \
-	&& wget  http://pypi.python.org/packages/source/M/Markdown/Markdown-${MARKDOWN_VERSION}.tar.gz \
+#	&& wget  http://pypi.python.org/packages/source/M/Markdown/Markdown-${MARKDOWN_VERSION}.tar.gz \
+	&& wget https://pypi.python.org/packages/d4/32/642bd580c577af37b00a1eb59b0eaa996f2d11dfe394f3dd0c7a8a2de81a/Markdown-2.6.7.tar.gz \
 	&& tar -xvzf Markdown-${MARKDOWN_VERSION}.tar.gz \
 	&& cd Markdown-${MARKDOWN_VERSION} \
-	&& /usr/bin/python2.7 setup.py install
+	&& /usr/bin/python2.7 setup.py install \
+	&& rm -rf /tmp/*
 
 
 VOLUME ${MOINMOIN_HOME}/wiki
