@@ -65,6 +65,18 @@ RUN cd ${MOINMOIN_HOME}/moin-${MOINMOIN_VERSION} \
 	&& ln -s ${ENTRYPOINT_FILE} /entrypoint.sh \
 	&& rm -rf /moin_ru-en.tar.gz ${MOINMOIN_HOME}/moin-${MOINMOIN_VERSION}
 
+
+ENV MARKDOWN_VERSION 2.6.6
+
+RUN cd ${MOINMOIN_HOME}/wiki/data/plugin/parser \
+	&& wget -O text_markdown.py "https://moinmo.in/ParserMarket/Markdown?action=AttachFile&do=get&target=text_markdown.py" \
+	&& cd /tmp/ \
+	&& wget  http://pypi.python.org/packages/source/M/Markdown/Markdown-${MARKDOWN_VERSION}.tar.gz \
+	&& tar -xvzf Markdown-${MARKDOWN_VERSION}.tar.gz \
+	&& cd Markdown-${MARKDOWN_VERSION} \
+	&& /usr/bin/python2.7 setup.py install
+
+
 VOLUME ${MOINMOIN_HOME}/wiki
 
 EXPOSE 80 443
